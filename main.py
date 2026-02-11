@@ -18,6 +18,7 @@ def main():
     client = genai.Client(api_key=api_key)
     parser = argparse.ArgumentParser(description="Chatbot")
     parser.add_argument("user_prompt", type=str, help="User prompt")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     args = parser.parse_args()
     messages = [
         types.Content(role="user", parts=[types.Part(text=args.user_prompt)])
@@ -27,12 +28,13 @@ def main():
         contents=messages
         )
     
-    print(f"User Prompt: {messages[0].parts[0].text}")
-    print(f"Model Used: gemini-2.5-flash")
-
-    print(f"Prompt tokens: {generate_content_response.usage_metadata.prompt_token_count}")
-    print(f"Response tokens: {generate_content_response.usage_metadata.candidates_token_count}")
-    print(f"total tokens: {generate_content_response.usage_metadata.total_token_count}")
+    if args.verbose:
+        print(f"User prompt: {messages[0].parts[0].text}")
+        print(f"Prompt tokens: {generate_content_response.usage_metadata.prompt_token_count}")
+        print(f"Response tokens: {generate_content_response.usage_metadata.candidates_token_count}")
+        
+        print(f"Model Used: gemini-2.5-flash")
+        print(f"total tokens: {generate_content_response.usage_metadata.total_token_count}")
 
     print(f"Response: {generate_content_response.text}")
     
